@@ -211,6 +211,7 @@ add_library(dingosdk_runtime SHARED
     Extension/World/unload_guard.cpp
     Extension/World/local_world_controls.cpp
     Extension/World/local_atmosphere_controls.cpp
+    Extension/World/environment_probe.cpp
     Extension/Rendering/local_graphics_controls.cpp
     Extension/Objects/local_placements_runtime.cpp
     Extension/Progression/local_progression_runtime.cpp

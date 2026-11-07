@@ -2,6 +2,7 @@
 #include "Extension/Console/commands.h"
 #include "Extension/Profile/local_profile_runtime.h"
 #include "Extension/Multiplayer/Session/session.h"
+#include "Extension/World/environment_probe.h"
 #include <algorithm>
 #include <array>
 #include <optional>
@@ -413,5 +414,18 @@ void register_world_commands(Commands &registry) {
                                                              : "error: Could not restore environment.");
     };
     registry.add(std::move(environment_reset));
+    // Research for a continuous time of day (contrib/dynamic-time-of-day.md).
+    auto probe_action = argument("action");
+    probe_action.choices = {"dump", "poke"};
+    auto probe_rest = argument("arguments", Type::text, true);
+    probe_rest.rest = true;
+    auto probe = action("envprobe",
+                        "Research: dump the level's visual environments and their components, or poke one field",
+                        Group::world, {probe_action, probe_rest});
+    probe.run = [](const Model &, const Values &args, const Output &out) {
+        const auto rest = args.size() > 1 ? std::get<std::string>(args[1]) : std::string{};
+        out(environment_probe(lower(std::get<std::string>(args[0])), rest));
+    };
+    registry.add(std::move(probe));
 }
 } // namespace dingosdk::console
